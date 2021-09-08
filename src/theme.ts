@@ -1,29 +1,5 @@
-import chalk, { Chalk } from "chalk";
-
-export interface IThemeCharacters {
-  hbar: string;
-  vbar: string;
-  xbar: string;
-  vbar_break: string;
-  uarrow: string;
-  rarrow: string;
-  ltop: string;
-  mtop: string;
-  rtop: string;
-  lbot: string;
-  mbot: string;
-  rbot: string;
-  lbox: string;
-  rbox: string;
-  lcross: string;
-  rcross: string;
-  underbar: string;
-  underline: string;
-  fyi: string;
-  x: string;
-  warning: string;
-  point_right: string;
-}
+import chalk from "chalk";
+import { IThemeCharacters, IThemeStyle } from "./types";
 
 export const ThemeCharacters = {
   /// Fancy unicode-based graphical elements.
@@ -82,16 +58,6 @@ export const ThemeCharacters = {
     };
   },
 };
-
-export interface IThemeStyle {
-  error: Chalk;
-  warning: Chalk;
-  advice: Chalk;
-  code: Chalk;
-  help: Chalk;
-  filename: Chalk;
-  highlights: Chalk[];
-}
 
 export const ThemeStyle: IThemeStyle = {
   error: chalk.rgb(172, 65, 66),

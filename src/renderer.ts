@@ -1,15 +1,9 @@
 import { Chalk } from "chalk";
 
 import { Diagnostic } from "./diagnostic";
-import { GraphicalTheme, IThemeStyle, IThemeCharacters } from "./theme";
-import { IError, ISnippet } from "./types";
+import { GraphicalTheme } from "./theme";
+import { ISnippet, ILine, IThemeStyle, IThemeCharacters } from "./types";
 
-interface ILine {
-  line_number: number;
-  offset: number;
-  length: number;
-  text: string;
-}
 export class GraphicalReportHandler {
   theme: {
     style: IThemeStyle;

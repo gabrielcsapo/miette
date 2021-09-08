@@ -8,7 +8,7 @@ function FooBar() {
     snippets: [
       {
         context: "source",
-        highlight: "This should be goodbye\n",
+        highlight: "This should be foo\n",
       },
       {
         context: "text",
