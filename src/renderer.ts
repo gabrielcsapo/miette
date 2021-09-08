@@ -119,6 +119,7 @@ export class GraphicalReportHandler {
   }
 
   render_header(): void {
+    this.write("Error: ");
     this.write(this.theme.characters.hbar.repeat(4));
     this.write(` [${this.theme.style.code(this.diagnostic.functionName)}] `);
     this.writeLine(this.theme.characters.hbar.repeat(20));
@@ -162,10 +163,9 @@ export class GraphicalReportHandler {
       );
 
       if (line.text.trim() === snippet.context) {
-        const offset =
-          gutterAndLineNumberOffset + line.offset + line.length - 4;
+        const offset = gutterAndLineNumberOffset + line.offset;
 
-        this.write(`${" ".repeat(3)}${this.theme.characters.vbar}`);
+        this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
 
         this.writeLine(
           severityStyle(
@@ -174,7 +174,7 @@ export class GraphicalReportHandler {
             )}${this.theme.characters.mtop}${this.theme.characters.hbar}`
           )
         );
-        this.write(`${" ".repeat(3)}${this.theme.characters.vbar}`);
+        this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
 
         this.write(
           severityStyle(

@@ -7,6 +7,10 @@ function FooBar() {
     message: "This is the part that broke",
     snippets: [
       {
+        context: "source",
+        highlight: "This should be goodbye\n",
+      },
+      {
         context: "text",
         highlight: "This should be goodbye\n",
       },
