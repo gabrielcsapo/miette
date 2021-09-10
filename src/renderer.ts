@@ -103,9 +103,7 @@ export class GraphicalReportHandler {
   render(): void {
     this.render_header();
     this.render_cause();
-
     this.render_snippets();
-
     this.render_footer();
   }
 
@@ -129,6 +127,8 @@ export class GraphicalReportHandler {
   }
 
   render_snippets(): void {
+    this.writeLine("");
+
     const severityStyle = this.severityStyle();
 
     const lines = this.getLines(this.diagnostic.source);
