@@ -1,4 +1,5 @@
 import chalk from "chalk";
+
 import { IThemeCharacters, IThemeStyle } from "./types";
 
 export const ThemeCharacters = {

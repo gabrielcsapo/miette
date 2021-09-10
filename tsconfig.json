@@ -15,6 +15,7 @@
     "noImplicitThis": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
+    "experimentalDecorators": true,
     "strictPropertyInitialization": true,
     "noFallthroughCasesInSwitch": false,
     "noUnusedLocals": false,

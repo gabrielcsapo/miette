@@ -104,10 +104,7 @@ export class GraphicalReportHandler {
     this.render_header();
     this.render_cause();
 
-    this.diagnostic.snippets.forEach((snippet) => {
-      this.writeLine("");
-      this.render_snippet(snippet);
-    });
+    this.render_snippets();
 
     this.render_footer();
   }
@@ -131,7 +128,7 @@ export class GraphicalReportHandler {
     }
   }
 
-  render_snippet(snippet: ISnippet): void {
+  render_snippets(): void {
     const severityStyle = this.severityStyle();
 
     const lines = this.getLines(this.diagnostic.source);
@@ -156,31 +153,36 @@ export class GraphicalReportHandler {
         } ${line.text}`
       );
 
-      if (line.text.trim() === snippet.context) {
-        const offset = gutterAndLineNumberOffset + line.offset;
+      this.diagnostic.snippets.forEach((snippet) => {
+        // TODO: this should be refactored to be render_snippet
+        if (line.text.trim() === snippet.context) {
+          const offset = gutterAndLineNumberOffset + line.offset;
 
-        this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
+          this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
 
-        this.writeLine(
-          severityStyle(
-            `${" ".repeat(offset)}${this.theme.characters.hbar.repeat(
-              snippet.context.length - 2
-            )}${this.theme.characters.mtop}${this.theme.characters.hbar}`
-          )
-        );
-        this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
+          this.writeLine(
+            severityStyle(
+              `${" ".repeat(offset)}${this.theme.characters.hbar.repeat(
+                snippet.context.length - 2
+              )}${this.theme.characters.mtop}${this.theme.characters.hbar}`
+            )
+          );
+          this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
 
-        this.write(
-          severityStyle(
-            `${" ".repeat(offset + snippet.context.length - 2)}${
-              this.theme.characters.lbot
-            }${this.theme.characters.underline.repeat(2)}`
-          )
-        );
-        this.write(severityStyle(snippet.highlight));
-      }
+          this.write(
+            severityStyle(
+              `${" ".repeat(offset + snippet.context.length - 2)}${
+                this.theme.characters.lbot
+              }${this.theme.characters.underline.repeat(2)}`
+            )
+          );
+          this.write(severityStyle(snippet.highlight));
+        }
+      });
     });
   }
+
+  render_snippet(snippet: ISnippet): void {}
 
   render_footer(): void {
     if (this.diagnostic.help) {

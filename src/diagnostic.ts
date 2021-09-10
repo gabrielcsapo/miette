@@ -1,4 +1,5 @@
 import ErrorStackParser from "error-stack-parser";
+
 import { IError, Severity } from "./types";
 
 export class Diagnostic {
@@ -19,6 +20,14 @@ export class Diagnostic {
     const parsedErrorStack = ErrorStackParser.parse(this.error.error);
 
     return parsedErrorStack[0].functionName;
+  }
+
+  get code() {
+    return this.error.code;
+  }
+
+  get url() {
+    return this.error.url;
   }
 
   get snippets() {

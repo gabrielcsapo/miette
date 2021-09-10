@@ -48,6 +48,8 @@ export interface ILine {
 export type Severity = "ERROR" | "WARNING" | "ADVICE";
 
 export interface IError {
+  code?: string;
+  url?: string;
   severity?: Severity;
   error: TypeError | RangeError | EvalError;
   source: string;
