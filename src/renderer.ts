@@ -135,8 +135,7 @@ export class GraphicalReportHandler {
     const lineWidth = lines.map((line) => line.line_number).sort()[0];
 
     this.write(
-      `${" ".repeat(lineWidth + 2)}${
-        this.theme.characters.ltop
+      `${" ".repeat(lineWidth + 2)}${this.theme.characters.ltop
       }${this.theme.characters.hbar.repeat(3)}`
     );
 
@@ -148,14 +147,14 @@ export class GraphicalReportHandler {
       const gutterAndLineNumberOffset = lineWidth;
 
       this.writeLine(
-        ` ${i} ${" ".repeat(lineWidth - i.toString().length)}${
-          this.theme.characters.vbar
+        ` ${i} ${" ".repeat(lineWidth - i.toString().length)}${this.theme.characters.vbar
         } ${line.text}`
       );
 
       this.diagnostic.snippets.forEach((snippet) => {
         // TODO: this should be refactored to be render_snippet
-        if (line.text.trim() === snippet.context) {
+
+        if (line.text.trim().indexOf(snippet.context) > -1) {
           const offset = gutterAndLineNumberOffset + line.offset;
 
           this.write(`${" ".repeat(3)}${this.theme.characters.vbar_break}`);
@@ -171,18 +170,17 @@ export class GraphicalReportHandler {
 
           this.write(
             severityStyle(
-              `${" ".repeat(offset + snippet.context.length - 2)}${
-                this.theme.characters.lbot
+              `${" ".repeat(offset + snippet.context.length - 2)}${this.theme.characters.lbot
               }${this.theme.characters.underline.repeat(2)}`
             )
           );
-          this.write(severityStyle(snippet.highlight));
+          this.write(severityStyle(snippet.highlight + '\n'));
         }
       });
     });
   }
 
-  render_snippet(snippet: ISnippet): void {}
+  render_snippet(snippet: ISnippet): void { }
 
   render_footer(): void {
     if (this.diagnostic.help) {

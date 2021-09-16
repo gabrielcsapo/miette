@@ -13,10 +13,12 @@ export class Diagnostic {
   }
 
   get help() {
-    return this.error.help;
+    return this.error.diagnostic.help;
   }
 
   get functionName() {
+    if (this.error.error.name) return this.error.error.name;
+
     const parsedErrorStack = ErrorStackParser.parse(this.error.error);
 
     return parsedErrorStack[0].functionName;
@@ -27,7 +29,7 @@ export class Diagnostic {
   }
 
   get url() {
-    return this.error.url;
+    return this.error.diagnostic.url;
   }
 
   get snippets() {

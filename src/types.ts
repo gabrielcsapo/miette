@@ -1,4 +1,5 @@
 import { Chalk } from "chalk";
+import { Diagnostic } from "./diagnostic";
 export interface IThemeCharacters {
   hbar: string;
   vbar: string;
@@ -47,9 +48,12 @@ export interface ILine {
 
 export type Severity = "ERROR" | "WARNING" | "ADVICE";
 
-export interface IError {
+export interface Diagnostic {
   code?: string;
   url?: string;
+}
+export interface IError {
+  diagnostic: Diagnostic
   severity?: Severity;
   error: TypeError | RangeError | EvalError;
   source: string;
