@@ -3,7 +3,8 @@ import { GraphicalReportHandler } from "./renderer";
 import { Diagnostic } from "./diagnostic";
 
 export function miette(code: string, source: string) {
-  return function <T extends { new(...args: any[]): {} }>(constructor: T) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
+  return function <T extends { new (...args: any[]): {} }>(constructor: T) {
     const capturedStack = {};
     return class extends constructor {
       stackHolder = Error.captureStackTrace(capturedStack, this.constructor);
@@ -16,8 +17,8 @@ export function miette(code: string, source: string) {
         snippets: this.snippets,
         diagnostic: this.diagnostic,
       });
-    }
-  }
+    };
+  };
 }
 
 export function MietteError(error: IError): void {
@@ -25,6 +26,4 @@ export function MietteError(error: IError): void {
   const reporter = new GraphicalReportHandler(diagnostic);
 
   reporter.render();
-
-  return '';
 }

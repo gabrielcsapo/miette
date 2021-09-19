@@ -53,7 +53,7 @@ export interface Diagnostic {
   url?: string;
 }
 export interface IError {
-  diagnostic: Diagnostic
+  diagnostic: Diagnostic;
   severity?: Severity;
   error: TypeError | RangeError | EvalError;
   source: string;
