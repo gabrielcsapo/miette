@@ -13,7 +13,7 @@ export class Diagnostic {
   }
 
   get help(): string | undefined {
-    return this.error.help;
+    return this.error.diagnostic?.help;
   }
 
   get functionName() {

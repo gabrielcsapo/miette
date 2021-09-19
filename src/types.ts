@@ -49,6 +49,7 @@ export interface ILine {
 export type Severity = "ERROR" | "WARNING" | "ADVICE";
 
 export interface Diagnostic {
+  help?: string;
   code?: string;
   url?: string;
 }
@@ -59,5 +60,4 @@ export interface IError {
   source: string;
   message: string;
   snippets: ISnippet[];
-  help?: string;
 }
