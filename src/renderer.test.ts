@@ -21,5 +21,22 @@ describe("renderer", () => {
     });
     const renderer = new GraphicalReportHandler(diagnostic);
     renderer.render();
+
+    expect(renderer.debugString).toMatchInlineSnapshot(`
+"Error: ──── [[38;2;170;117;159mError[39m] ────────────────────
+[38;2;172;65;66m╰─▶ This is the part that broke[39m
+
+   ╭───[renderer.test.ts:7:14]
+ 0 │ source
+   ·[38;2;172;65;66m ────┬─[39m
+   ·[38;2;172;65;66m     ╰──[39m[38;2;172;65;66mThis should be foo[39m
+[38;2;172;65;66m[39m
+[38;2;172;65;66m[39m 1 │   text
+   ·[38;2;172;65;66m   ──┬─[39m
+   ·[38;2;172;65;66m     ╰──[39m[38;2;172;65;66mThis should be goodbye[39m
+[38;2;172;65;66m[39m
+[38;2;172;65;66m[39m 2 │     here
+"
+`);
   });
 });

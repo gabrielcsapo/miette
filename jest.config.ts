@@ -4,5 +4,5 @@ export default {
   coverageDirectory: "coverage",
   coverageProvider: "v8",
   preset: "ts-jest",
-  testMatch: ["<rootDir>/src/**/*-test.ts"],
+  testMatch: ["<rootDir>/src/**/*.test.ts"],
 };

@@ -12,8 +12,8 @@ export class Diagnostic {
     return this.error.message;
   }
 
-  get help() {
-    return this.error.diagnostic.help;
+  get help(): string | undefined {
+    return this.error.diagnostic?.help;
   }
 
   get functionName() {
@@ -24,12 +24,12 @@ export class Diagnostic {
     return parsedErrorStack[0].functionName;
   }
 
-  get code() {
-    return this.error.code;
+  get code(): string | undefined {
+    return this.error.error.name;
   }
 
-  get url() {
-    return this.error.diagnostic.url;
+  get url(): string | undefined {
+    return this.error.diagnostic?.url;
   }
 
   get snippets() {

@@ -12,6 +12,9 @@ export class GraphicalReportHandler {
 
   diagnostic: Diagnostic;
 
+  // This will be used to store the raw output and used in tests for assertions
+  debugString = "";
+
   constructor(diagnostic: Diagnostic) {
     const unicode = GraphicalTheme.unicode();
 
@@ -24,10 +27,14 @@ export class GraphicalReportHandler {
 
   write(str: string): void {
     process.stdout.write(str);
+
+    this.debugString += str;
   }
 
   writeLine(str: string): void {
     process.stdout.write(str + "\n");
+
+    this.debugString += str + "\n";
   }
 
   severityStyle(): Chalk {
