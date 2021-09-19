@@ -1,5 +1,5 @@
 import { Chalk } from "chalk";
-import { Diagnostic } from "./diagnostic";
+
 export interface IThemeCharacters {
   hbar: string;
   vbar: string;

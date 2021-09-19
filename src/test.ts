@@ -18,8 +18,10 @@ function FooBarBaz() {
   if (true) {
     try {
       throw new ShouldBeFalseError("Should make things dynamic");
-    } catch (e) {
-      console.log(e.stack);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.stack);
+      }
     }
   }
 }

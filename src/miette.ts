@@ -1,4 +1,4 @@
-import { IError } from "./types";
+import { IError, ISnippet } from "./types";
 import { GraphicalReportHandler } from "./renderer";
 import { Diagnostic } from "./diagnostic";
 
@@ -11,19 +11,25 @@ export function miette(code: string, source: string) {
 
       name = code;
       stack = MietteError({
+        // @ts-ignore
         error: this,
         source: source,
+        // @ts-ignore
         message: this.message,
+        // @ts-ignore
         snippets: this.snippets,
+        // @ts-ignore
         diagnostic: this.diagnostic,
       });
     };
   };
 }
 
-export function MietteError(error: IError): void {
+export function MietteError(error: IError): string {
   const diagnostic = new Diagnostic(error);
   const reporter = new GraphicalReportHandler(diagnostic);
 
   reporter.render();
+
+  return reporter.debugString;
 }
