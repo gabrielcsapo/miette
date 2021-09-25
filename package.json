@@ -1,0 +1,51 @@
+{
+  "name": "miette",
+  "version": "1.0.0",
+  "description": "Fancy upgrade to console.log",
+  "main": "./dist/miette.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.json",
+    "watch": "yarn build --watch",
+    "lint": "eslint src/**/*.ts",
+    "test": "FORCE_COLOR=0 jest",
+    "prepare": "husky install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielcsapo/miette.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gabrielcsapo/miette/issues"
+  },
+  "homepage": "https://github.com/gabrielcsapo/miette#readme",
+  "dependencies": {
+    "error-stack-parser": "^2.0.6",
+    "jest": "^27.1.1",
+    "tslint": "^6.1.3",
+    "typescript": "^4.4.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.10.1",
+    "@typescript-eslint/eslint-plugin": "^4.31.2",
+    "@typescript-eslint/parser": "^4.31.2",
+    "chalk": "^4.1.2",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": ">=6",
+    "lint-staged": "^11.1.2",
+    "prettier": "^2.4.1",
+    "ts-jest": "^27.0.5",
+    "ts-node": "^10.2.1"
+  },
+  "workspaces": [
+    "website"
+  ],
+  "lint-staged": {
+    "*.js": "eslint --cache --fix",
+    "*.ts": "eslint --cache --fix"
+  }
+}

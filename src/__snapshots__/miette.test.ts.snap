@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`miette should be able to render with decorators 1`] = `
+"Error: ──── [foo::bar::baz] ────────────────────
+╰─▶ Should make things dynamic
+
+   ╭───[miette.test.ts:23:17]
+ 0 │ function FooBarBaz() {
+ 1 │             // eslint-disable-next-line no-constant-condition
+ 2 │             if (true) {
+   ·               ───────┬─
+   ·                      ╰──This will always be called
+ 3 │                 try {
+ 4 │                     throw new ShouldBeFalseError(\\"Should make things dynamic\\");
+ 5 │                 }
+ 6 │                 catch (error) {
+ 7 │                     if (error instanceof Error) {
+ 8 │                         console.log(error.stack);
+ 9 │                         expect(error.stack).toMatchSnapshot();
+ 10 │                     }
+ 11 │                 }
+ 12 │             }
+
+‽ Please consult the guides at http://github.com/foo/bar#guides
+"
+`;
