@@ -1,11 +1,17 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 
+const isDeployPreview =
+  process.env.NETLIFY;
+
+const baseUrl = process.env.BASE_URL || '/miette/';
+
 module.exports = {
     title: "miette",
     tagline: "Fancy upgrade to Error!",
     url: "https://gabrielcsapo.github.io",
-    baseUrl: "/miette/",
+    baseUrl: baseUrl,
+    trailingSlash: isDeployPreview,
     onBrokenLinks: "throw",
     onBrokenMarkdownLinks: "warn",
     favicon: "img/favicon.ico",
