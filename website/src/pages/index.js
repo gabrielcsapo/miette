@@ -1,10 +1,60 @@
 import React from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
-import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import styles from './index.module.css';
-import HomepageFeatures from '../components/HomepageFeatures';
+
+const FeatureList = [
+  {
+    title: 'Easy to Use',
+    description: (
+      <>
+        Miette aims to package everything you need from a diagnostic and error handling toolkit into a simple to use package.
+      </>
+    ),
+  },
+  {
+    title: 'Focus on What Matters',
+    description: (
+      <>
+        Miette makes it easy to write code and give your users actionable feedback on how to move forward.
+      </>
+    ),
+  },
+  {
+    title: 'Powered by You',
+    description: (
+      <>
+        Extend or customize your error output with Miette. From diagnostic codes to help messages to elaborate decoration of our your output, you are in charge.
+      </>
+    ),
+  },
+];
+
+function Feature({Svg, title, description}) {
+  return (
+    <div className={clsx('col col--4')}>
+      <div className="text--center padding-horiz--md">
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+    </div>
+  );
+}
+
+function HomepageFeatures() {
+  return (
+    <section className={styles.features}>
+      <div className="container">
+        <div className="row">
+          {FeatureList.map((props, idx) => (
+            <Feature key={idx} {...props} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
@@ -13,12 +63,8 @@ function HomepageHeader() {
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
         <p className="hero__subtitle">{siteConfig.tagline}</p>
-        <div className={styles.buttons}>
-          <Link
-            className="button button--secondary button--lg"
-            to="/docs/intro">
-            Docusaurus Tutorial - 5min ⏱️
-          </Link>
+        <div>
+          <img src={require('../../static/img/screenshot.png').default} alt="example output"/>
         </div>
       </div>
     </header>

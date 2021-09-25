@@ -4,6 +4,13 @@ import { Diagnostic } from "./diagnostic";
 import { GraphicalTheme } from "./theme";
 import { ISnippet, ILine, IThemeStyle, IThemeCharacters } from "./types";
 
+function minimumGuard(count: number, minimum: number) {
+  if (count < minimum) {
+    return minimum;
+  }
+
+  return count;
+}
 export class GraphicalReportHandler {
   theme: {
     style: IThemeStyle;
@@ -155,7 +162,7 @@ export class GraphicalReportHandler {
       const gutterAndLineNumberOffset = lineWidth;
 
       this.writeLine(
-        ` ${i} ${" ".repeat(lineWidth - i.toString().length)}${
+        ` ${i} ${" ".repeat(minimumGuard(lineWidth - i.toString().length, 0))}${
           this.theme.characters.vbar
         } ${line.text}`
       );

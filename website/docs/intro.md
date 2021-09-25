@@ -2,34 +2,78 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Getting started
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's discover **Miette in less than 5 minutes**.
 
 ## Getting Started
 
-Get started by **creating a new site**.
-
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**:
+Get started by **installing Miette**.
 
 ```shell
-npx @docusaurus/init@latest init my-website classic
+npm install miette --save
 ```
 
-## Start your site
+## Instrument your functions
 
-Run the development server:
+Using miette you can make custom error objects that allow you to
+
+```js
+@miette("foo::bar::baz", FooBarBaz.toString())
+class ShouldBeFalseError extends Error {
+  diagnostic = {
+    help: "Please consult the guides at http://github.com/foo/bar#guides",
+  };
+
+  snippets = [
+    {
+      context: "if (true)",
+      highlight: "This will always be called",
+    },
+  ];
+}
+
+function FooBarBaz() {
+  // eslint-disable-next-line no-constant-condition
+  if (true) {
+    try {
+      throw new ShouldBeFalseError("Should make things dynamic");
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.stack);
+        expect(error.stack).toMatchSnapshot();
+      }
+    }
+  }
+}
+
+FooBarBaz();
+```
+
+The final output will look like the following!
 
 ```shell
-cd my-website
+Error: ──── [foo::bar::baz] ────────────────────
+╰─▶ Should make things dynamic
 
-npx docusaurus start
+   ╭───[miette.test.ts:23:21]
+0  │ function FooBarBaz() {
+1  │    // eslint-disable-next-line no-constant-condition
+2  │    if (true) {
+   ·     ───────┬─
+   ·            ╰──This will always be called
+3  │       try {
+4  │         throw new ShouldBeFalseError("Should make things dynamic");
+5  │        } catch (error) {
+6  │         if (error instanceof Error) {
+7  │            console.log(error.stack);
+9  │          }
+10 │        }
+11 │    }
+
+‽ Please consult the guides at http://github.com/foo/bar#guides
 ```
 
-Your site starts at `http://localhost:3000`.
+## Contribute back!
 
-Open `docs/intro.md` and edit some lines: the site **reloads automatically** and display your changes.
+Help improve Miette by [opening up issues](https://github.com/gabrielcsapo/miette/issues) with your use cases of Miette and reproductions of errors that don't look as expected!

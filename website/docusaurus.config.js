@@ -17,8 +17,7 @@ module.exports = {
         {
           docs: {
             sidebarPath: require.resolve("./sidebars.js"),
-            // Please change this to your repo.
-            editUrl: "https://github.com/facebook/docusaurus/edit/main/website/",
+            editUrl: "https://github.com/gabrielcsapo/miette/edit/main/website/",
           },
           theme: {
             customCss: require.resolve("./src/css/custom.css"),
@@ -29,24 +28,15 @@ module.exports = {
 
   themeConfig: {
     navbar: {
-      title: "My Site",
-      logo: {
-        alt: "My Site Logo",
-        src: "img/logo.svg",
-      },
+      title: "Miette",
       items: [{
           type: "doc",
           docId: "intro",
           position: "left",
-          label: "Tutorial",
+          label: "Documentation",
         },
         {
-          to: "/blog",
-          label: "Blog",
-          position: "left"
-        },
-        {
-          href: "https://github.com/facebook/docusaurus",
+          href: "https://github.com/gabrielcsapo/miette",
           label: "GitHub",
           position: "right",
         },
@@ -57,32 +47,22 @@ module.exports = {
       links: [{
           title: "Docs",
           items: [{
-            label: "Tutorial",
+            label: "Getting Started",
             to: "/docs/intro",
           }, ],
         },
         {
           title: "Community",
-          items: [{
-              label: "Stack Overflow",
-              href: "https://stackoverflow.com/questions/tagged/docusaurus",
-            },
-            {
-              label: "Discord",
-              href: "https://discordapp.com/invite/docusaurus",
-            },
+          items: [
             {
               label: "Twitter",
-              href: "https://twitter.com/docusaurus",
+              href: "https://twitter.com/gabrielcsapo",
             },
           ],
         },
         {
           title: "More",
-          items: [{
-              label: "Blog",
-              to: "/blog",
-            },
+          items: [
             {
               label: "GitHub",
               href: "https://github.com/facebook/docusaurus",
@@ -90,7 +70,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Miette, Inc. Built with Docusaurus.`,
     },
     prism: {
       theme: lightCodeTheme,
