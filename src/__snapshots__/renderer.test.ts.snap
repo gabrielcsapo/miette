@@ -1,0 +1,20 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renderer should be able to render with all required fields 1`] = `
+"Error: ──── [Error] ────────────────────
+╰─▶ This is the part that broke
+
+   ╭───[renderer.test.ts:7:14]
+ 0 │ source
+   · ────┬─
+   ·     ╰──This should be foo
+
+ 1 │   text
+   ·   ──┬─
+   ·     ╰──This should be goodbye
+
+ 2 │     here
+
+‽ Please consult the guides at http://github.com/foo/bar#guides
+"
+`;

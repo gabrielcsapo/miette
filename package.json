@@ -7,7 +7,7 @@
     "build": "tsc --project tsconfig.json",
     "watch": "yarn build --watch",
     "lint": "eslint src/**/*.ts",
-    "test": "jest",
+    "test": "FORCE_COLOR=0 jest",
     "prepare": "husky install"
   },
   "repository": {
