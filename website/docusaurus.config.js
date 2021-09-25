@@ -83,4 +83,12 @@ module.exports = {
       darkTheme: darkCodeTheme,
     },
   },
+  plugins: [
+    [
+      require.resolve("docusaurus-plugin-search-local"),
+      {
+        highlightSearchTermsOnTargetPage: true,
+      },
+    ],
+  ],
 };
