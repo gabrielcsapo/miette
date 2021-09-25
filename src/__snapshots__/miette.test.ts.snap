@@ -4,7 +4,7 @@ exports[`miette should be able to render with decorators 1`] = `
 "Error: ──── [[38;2;170;117;159mfoo::bar::baz[39m] ────────────────────
 [38;2;172;65;66m╰─▶ Should make things dynamic[39m
 
-   ╭───[miette.test.ts:23:21]
+   ╭───[miette.test.ts:23:17]
  0 │ function FooBarBaz() {
  1 │             // eslint-disable-next-line no-constant-condition
  2 │             if (true) {

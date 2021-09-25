@@ -4,7 +4,7 @@ const darkCodeTheme = require("prism-react-renderer/themes/dracula");
 const isDeployPreview =
   process.env.NETLIFY;
 
-const baseUrl = process.env.BASE_URL || '/miette/';
+const baseUrl = isDeployPreview ? '/' : '/miette/';
 
 module.exports = {
     title: "miette",
