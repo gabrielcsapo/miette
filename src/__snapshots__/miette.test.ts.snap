@@ -5,7 +5,7 @@ exports[`miette should be able to render with decorators 1`] = `
 
    × Should make things dynamic
 
-    ╭───[miette.test.ts:25:15]
+    ╭───[miette.test.ts:28:17]
  0  │ function FooBarBaz() {
  1  │   // eslint-disable-next-line no-constant-condition
  2  │   if (true) {
