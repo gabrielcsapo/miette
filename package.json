@@ -1,6 +1,6 @@
 {
   "name": "miette",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Fancy upgrade to console.log",
   "main": "./dist/miette.js",
   "scripts": {
