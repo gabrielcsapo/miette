@@ -77,7 +77,7 @@ export const ThemeStyle: IThemeStyle = {
   ],
 };
 
-export const GraphicalTheme = {
+export const Theme = {
   ascii() {
     return {
       characters: ThemeCharacters.ascii(),

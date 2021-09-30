@@ -9,7 +9,7 @@ export class Diagnostic {
   }
 
   get message() {
-    return this.error.message;
+    return this.error?.message || this.error.error.message;
   }
 
   get help(): string | undefined {
@@ -47,7 +47,11 @@ export class Diagnostic {
   }
 
   get source() {
-    return this.error.source;
+    // Ensure that we append a new line to the end of the source if it doesn't already have one.
+    return (
+      this.error.source +
+      (this.error.source[this.error.source.length] === "\n" ? "" : "\n")
+    );
   }
 
   get severity(): Severity {

@@ -53,24 +53,28 @@ FooBarBaz();
 The final output will look like the following!
 
 ```shell
-Error: ──── [foo::bar::baz] ────────────────────
-╰─▶ Should make things dynamic
+Error: foo::bar::baz
 
-   ╭───[miette.test.ts:23:21]
-0  │ function FooBarBaz() {
-1  │    // eslint-disable-next-line no-constant-condition
-2  │    if (true) {
-   ·     ───────┬─
-   ·            ╰──This will always be called
-3  │       try {
-4  │         throw new ShouldBeFalseError("Should make things dynamic");
-5  │        } catch (error) {
-6  │         if (error instanceof Error) {
-7  │            console.log(error.stack);
-9  │          }
-10 │        }
-11 │    }
+   × Should make things dynamic
 
+    ╭───[miette.test.ts:25:15]
+ 0  │ function FooBarBaz() {
+ 1  │   // eslint-disable-next-line no-constant-condition
+ 2  │   if (true) {
+    ·     ────┬────
+    ·         ╰── This will always be called
+ 3  │     try {
+ 4  │       throw new ShouldBeFalseError(\"Should make things dynamic\");
+ 5  │     } catch (error) {
+ 6  │       if (error instanceof Error) {
+ 7  │         console.log(error.stack);
+ 8  │         expect(error.stack).toMatchSnapshot();
+ 9  │       }
+ 10 │     }
+ 11 │   }
+ 12 │ }
+ 13 │
+    ╰───
 ‽ Please consult the guides at http://github.com/foo/bar#guides
 ```
 

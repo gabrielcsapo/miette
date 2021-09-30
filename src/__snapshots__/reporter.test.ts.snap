@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`reporter should be able to render ascii output (multi-line) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   x Types mismatched for operation.
+
+   ,---[reporter.test.ts:8:14]
+ 0 | 3 + \\"5\\"
+   : v v -v-
+   : | |  \`^^ string
+   : | \`^^ Doesn't support these values  
+   : \`^^ int    
+   \`---
+i Change int or string to be the right type and try again
+
+"
+`;
+
+exports[`reporter should be able to render ascii output (single line) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   x This is the part that broke
+
+   ,---[reporter.test.ts:74:14]
+ 0 | source
+   : ---v--
+   :    \`^^ This should be foo
+  
+ 1 |   text
+   :   --v-
+   :     \`^^ This should be goodbye
+ 
+ 2 |     here
+   \`---
+i Please consult the guides
+
+"
+`;
+
+exports[`reporter should be able to render unicode output (multi-line) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   × Types mismatched for operation.
+
+   ╭───[reporter.test.ts:41:14]
+ 0 │ 3 + \\"5\\"
+   · ┬ ┬ ─┬─
+   · │ │  ╰── string
+   · │ ╰── Doesn't support these values  
+   · ╰── int    
+   ╰───
+‽ Change int or string to be the right type and try again
+
+"
+`;
+
+exports[`reporter should be able to render unicode output (single line) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   × This is the part that broke
+
+   ╭───[reporter.test.ts:104:14]
+ 0 │ source
+   · ───┬──
+   ·    ╰── This should be foo
+  
+ 1 │   text
+   ·   ──┬─
+   ·     ╰── This should be goodbye
+ 
+ 2 │     here
+   ╰───
+‽ Please consult the guides
+
+"
+`;

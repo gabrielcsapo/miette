@@ -58,6 +58,6 @@ export interface IError {
   severity?: Severity;
   error: TypeError | RangeError | EvalError;
   source: string;
-  message: string;
+  message?: string; // message to override the default Error.message
   snippets: ISnippet[];
 }
