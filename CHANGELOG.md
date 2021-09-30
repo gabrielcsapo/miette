@@ -7,6 +7,7 @@
   - snippet block now closes the block
 - use unicode if supported, but fallback to ascii if not
 - renders link if provided
+- line width is computed correctly instead of always being 0
 
 # 0.0.1
 

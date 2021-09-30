@@ -161,7 +161,10 @@ export class Reporter {
     const severityStyle = this.severityStyle();
 
     const lines = this.getLines(this.diagnostic.source);
-    const lineWidth = lines.map((line) => line.line_number).sort()[0];
+    const lineWidth = lines
+      .map((line) => line.line_number)
+      .sort((a, b) => b - a)[0]
+      .toString().length;
 
     this.write(
       `${" ".repeat(lineWidth + 2)}${
@@ -228,9 +231,9 @@ export class Reporter {
 
       // Renders the initially highlights for the line
       this.writeLine(
-        `${" ".repeat(3)}${this.theme.characters.vbar_break}${" ".repeat(
-          lineOffset
-        )}${initialHighlighedLine.join("")}`
+        `${" ".repeat(lineWidth + 2)}${
+          this.theme.characters.vbar_break
+        }${" ".repeat(lineOffset)}${initialHighlighedLine.join("")}`
       );
 
       // continue looping until we have rendered all the snippets
@@ -262,9 +265,9 @@ export class Reporter {
         });
 
         this.writeLine(
-          `${" ".repeat(3)}${this.theme.characters.vbar_break}${" ".repeat(
-            lineOffset
-          )}${lineToRender.join("")}`
+          `${" ".repeat(lineWidth + 2)}${
+            this.theme.characters.vbar_break
+          }${" ".repeat(lineOffset)}${lineToRender.join("")}`
         );
       }
     });
