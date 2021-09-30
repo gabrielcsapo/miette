@@ -11,3 +11,11 @@ Inspired by https://github.com/zkat/miette this library aims to make error loggi
 ## Usage
 
 For the API layer and general examples please visit the [api website](https://gabrielcsapo.github.io/miette)!
+
+### Playground
+
+For a quick and easy playground environment just simply clone this repo and run:
+
+```
+npm run playground
+```
