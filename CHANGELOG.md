@@ -1,4 +1,4 @@
-# 0.1.0
+# Unreleased
 
 - ensures source has a new line on the end if not appends it
 - improves rendering snippet logic
