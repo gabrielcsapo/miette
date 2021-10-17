@@ -1,5 +1,6 @@
 const lightCodeTheme = require("prism-react-renderer/themes/github");
 const darkCodeTheme = require("prism-react-renderer/themes/dracula");
+const path = require("path");
 
 const isDeployPreview =
   process.env.NETLIFY;
@@ -88,6 +89,15 @@ module.exports = {
       require.resolve("docusaurus-plugin-search-local"),
       {
         highlightSearchTermsOnTargetPage: true,
+      },
+    ],
+    [
+      require.resolve('docusaurus-plugin-api-extractor'),
+      {
+        projectFolder: path.resolve(__dirname, '..'),
+        tsConfigFile: "../tsconfig.json",
+        entryPoint: "../dist/index.d.ts",
+        out: "api",
       },
     ],
   ],

@@ -18,6 +18,31 @@ function isUnicodeSupported() {
   );
 }
 
+/**
+ * Miette Decorator function to be used on Error
+ * @param code - error code
+ * @param source - raw source that miette needs to annotate
+ * @returns
+ * @example
+    ```
+    @miette(
+      "foo::bar::baz",
+      prettier.format(FooBarBaz.toString(), { parser: "babel" })
+    )
+    class ShouldBeFalseError extends Error {
+      diagnostic = {
+        help: "Please consult the guides at http://github.com/foo/bar#guides",
+      };
+
+      snippets = [
+        {
+          context: "if (true)",
+          highlight: "This will always be called",
+        },
+      ];
+    }
+    ```
+ */
 export function miette(code: string, source: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
   return function <T extends { new (...args: any[]): {} }>(constructor: T) {
@@ -41,6 +66,11 @@ export function miette(code: string, source: string) {
   };
 }
 
+/**
+ *
+ * @param error
+ * @returns
+ */
 export function MietteError(error: IError): string {
   const diagnostic = new Diagnostic(error);
   const reporter = new Reporter(

@@ -1,3 +1,5 @@
+process.env.FORCE_COLOR = "0";
+
 import { Diagnostic } from "./diagnostic";
 import { Reporter } from "./reporter";
 import { Theme } from "./theme";

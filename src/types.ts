@@ -48,13 +48,13 @@ export interface ILine {
 
 export type Severity = "ERROR" | "WARNING" | "ADVICE";
 
-export interface Diagnostic {
+export interface IDiagnostic {
   help?: string;
   code?: string;
   url?: string;
 }
 export interface IError {
-  diagnostic?: Diagnostic;
+  diagnostic?: IDiagnostic;
   severity?: Severity;
   error: TypeError | RangeError | EvalError;
   source: string;

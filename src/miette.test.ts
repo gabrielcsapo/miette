@@ -1,3 +1,5 @@
+process.env.FORCE_COLOR = "0";
+
 import prettier from "prettier";
 
 import { miette } from "./miette";

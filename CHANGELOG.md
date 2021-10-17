@@ -1,3 +1,7 @@
+# 0.1.1
+
+- removes unnecessary dependencies and adds API docs.
+
 # 0.1.0
 
 - @gabrielcsapo: improves rendering engine (https://github.com/gabrielcsapo/miette/pull/3)

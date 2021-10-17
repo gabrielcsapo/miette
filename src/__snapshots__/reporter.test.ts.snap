@@ -5,7 +5,7 @@ exports[`reporter should be able to render ascii output (multi-line) 1`] = `
 
    x Types mismatched for operation.
 
-   ,---[reporter.test.ts:8:14]
+   ,---[reporter.test.ts:10:14]
  0 | 3 + \\"5\\"
    : v v -v-
    : | |  \`^^ string
@@ -22,7 +22,7 @@ exports[`reporter should be able to render ascii output (single line) 1`] = `
 
    x This is the part that broke
 
-   ,---[reporter.test.ts:74:14]
+   ,---[reporter.test.ts:76:14]
  0 | source
    : ---v--
    :    \`^^ This should be foo
@@ -43,7 +43,7 @@ exports[`reporter should be able to render unicode output (multi-line) 1`] = `
 
    × Types mismatched for operation.
 
-   ╭───[reporter.test.ts:41:14]
+   ╭───[reporter.test.ts:43:14]
  0 │ 3 + \\"5\\"
    · ┬ ┬ ─┬─
    · │ │  ╰── string
@@ -60,7 +60,7 @@ exports[`reporter should be able to render unicode output (single line) 1`] = `
 
    × This is the part that broke
 
-   ╭───[reporter.test.ts:104:14]
+   ╭───[reporter.test.ts:106:14]
  0 │ source
    · ───┬──
    ·    ╰── This should be foo
