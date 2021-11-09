@@ -10,6 +10,12 @@
 
 Inspired by [https://github.com/zkat/miette](https://github.com/zkat/miette) this library aims to make error logging and diagnostic messages more user friendly!
 
+## Installation
+
+```
+npm install miette --save
+```
+
 ## Usage
 
 For the API layer and general examples please visit the [api website](https://gabrielcsapo.github.io/miette)!
