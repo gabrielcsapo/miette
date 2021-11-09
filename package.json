@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "lint": "lerna run lint",
+    "playground": "cd packages/miette && npm run playground",
     "prepare": "husky install && lerna bootstrap"
   },
   "devDependencies": {
