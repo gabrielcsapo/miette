@@ -5,6 +5,7 @@
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
     "lint": "echo 'none'",
+    "test": "echo 'none'",
     "build": "docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",

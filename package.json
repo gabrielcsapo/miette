@@ -3,6 +3,8 @@
   "private": true,
   "scripts": {
     "lint": "lerna run lint",
+    "build": "lerna run build",
+    "test": "lerna run test",
     "playground": "cd packages/miette && npm run playground",
     "prepare": "husky install && lerna bootstrap"
   },

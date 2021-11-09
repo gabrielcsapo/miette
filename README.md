@@ -27,3 +27,9 @@ For a quick and easy playground environment just simply clone this repo and run:
 ```
 npm run playground
 ```
+
+## Development
+
+This is a lerna repo, simply running `npm install` at the top level will allow you to install all the dependencies necessary.
+
+Once you have installed all dependencies you can `cd` into `packages/miette` to add functionality or adds tests as necessary.
