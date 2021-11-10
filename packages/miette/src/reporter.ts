@@ -158,8 +158,6 @@ export class Reporter {
   render_snippets(): void {
     this.writeLine("");
 
-    const severityStyle = this.severityStyle();
-
     const lines = this.getLines(this.diagnostic.source);
     const lineWidth = lines
       .map((line) => line.line_number)
@@ -177,8 +175,6 @@ export class Reporter {
     this.writeLine("");
 
     lines.forEach((line, i) => {
-      const gutterAndLineNumberOffset = lineWidth;
-
       this.writeLine(
         ` ${i} ${" ".repeat(minimumGuard(lineWidth - i.toString().length, 0))}${
           this.theme.characters.vbar
