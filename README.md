@@ -4,7 +4,7 @@
 
 > > This is early days! Until we hit 1.0.0 the API is subject to change. Help us out in understanding what your use case is and how we can harden the API layer to be helpful in your project!
 
-![Example screenshot](website/static/img/screenshot.png)
+![Example screenshot](packages/website/static/img/screenshot.png)
 
 ## What is this?
 
