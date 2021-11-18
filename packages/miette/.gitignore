@@ -138,3 +138,6 @@ dist
 .DS_Store
 
 .vscode
+
+temp
+etc

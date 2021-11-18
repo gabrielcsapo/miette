@@ -20,28 +20,9 @@ function isUnicodeSupported() {
 
 /**
  * Miette Decorator function to be used on Error
+ * @public
  * @param code - error code
  * @param source - raw source that miette needs to annotate
- * @returns
- * @example
-    ```
-    @miette(
-      "foo::bar::baz",
-      prettier.format(FooBarBaz.toString(), { parser: "babel" })
-    )
-    class ShouldBeFalseError extends Error {
-      diagnostic = {
-        help: "Please consult the guides at http://github.com/foo/bar#guides",
-      };
-
-      snippets = [
-        {
-          context: "if (true)",
-          highlight: "This will always be called",
-        },
-      ];
-    }
-    ```
  */
 export function miette(code: string, source: string) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types, @typescript-eslint/ban-types
@@ -67,9 +48,9 @@ export function miette(code: string, source: string) {
 }
 
 /**
- *
- * @param error
- * @returns
+ * @public
+ * @param error - An instance of an error object to be used by the diagnostic reporter
+ * @returns string to print to console
  */
 export function MietteError(error: IError): string {
   const diagnostic = new Diagnostic(error);

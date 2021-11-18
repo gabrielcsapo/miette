@@ -2,6 +2,9 @@ import ErrorStackParser from "error-stack-parser";
 
 import { IError, Severity } from "./types";
 
+/**
+ * @public
+ */
 export class Diagnostic {
   error: IError;
   constructor(error: IError) {

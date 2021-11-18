@@ -91,14 +91,6 @@ module.exports = {
         highlightSearchTermsOnTargetPage: true,
       },
     ],
-    [
-      require.resolve('docusaurus-plugin-api-extractor'),
-      {
-        projectFolder: path.resolve(__dirname, '..'),
-        tsConfigFile: "../tsconfig.json",
-        entryPoint: "../dist/index.d.ts",
-        out: "api",
-      },
-    ],
+    'docusaurus-plugin-api-extractor'
   ],
 };

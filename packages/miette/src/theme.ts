@@ -2,6 +2,9 @@ import chalk from "chalk";
 
 import { IThemeCharacters, IThemeStyle } from "./types";
 
+/**
+ * @public
+ */
 export const ThemeCharacters = {
   /// Fancy unicode-based graphical elements.
   unicode(): IThemeCharacters {
@@ -60,6 +63,9 @@ export const ThemeCharacters = {
   },
 };
 
+/**
+ * @public
+ */
 export const ThemeStyle: IThemeStyle = {
   error: chalk.rgb(172, 65, 66),
   warning: chalk.rgb(244, 191, 117),
@@ -77,6 +83,9 @@ export const ThemeStyle: IThemeStyle = {
   ],
 };
 
+/**
+ * @public
+ */
 export const Theme = {
   ascii() {
     return {

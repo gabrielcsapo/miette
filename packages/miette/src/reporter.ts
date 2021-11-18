@@ -3,6 +3,9 @@ import { Chalk } from "chalk";
 import { Diagnostic } from "./diagnostic";
 import { ISnippet, ILine, IThemeStyle, IThemeCharacters } from "./types";
 
+/**
+ * @public
+ */
 interface ISnippetRendered extends ISnippet {
   offset: number;
   rendered?: boolean;
@@ -16,6 +19,10 @@ function minimumGuard(count: number, minimum: number) {
 
   return count;
 }
+
+/**
+ * @public
+ */
 export class Reporter {
   theme: {
     style: IThemeStyle;

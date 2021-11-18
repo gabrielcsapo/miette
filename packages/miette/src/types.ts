@@ -1,5 +1,8 @@
 import { Chalk } from "chalk";
 
+/**
+ * @public
+ */
 export interface IThemeCharacters {
   hbar: string;
   vbar: string;
@@ -25,6 +28,9 @@ export interface IThemeCharacters {
   point_right: string;
 }
 
+/**
+ * @public
+ */
 export interface IThemeStyle {
   error: Chalk;
   warning: Chalk;
@@ -34,11 +40,18 @@ export interface IThemeStyle {
   filename: Chalk;
   highlights: Chalk[];
 }
+
+/**
+ * @public
+ */
 export interface ISnippet {
   context: string;
   highlight: string;
 }
 
+/**
+ * @public
+ */
 export interface ILine {
   line_number: number;
   offset: number;
@@ -46,13 +59,23 @@ export interface ILine {
   text: string;
 }
 
+/**
+ * @public
+ */
 export type Severity = "ERROR" | "WARNING" | "ADVICE";
 
+/**
+ * @public
+ */
 export interface IDiagnostic {
   help?: string;
   code?: string;
   url?: string;
 }
+
+/**
+ * @public
+ */
 export interface IError {
   diagnostic?: IDiagnostic;
   severity?: Severity;
