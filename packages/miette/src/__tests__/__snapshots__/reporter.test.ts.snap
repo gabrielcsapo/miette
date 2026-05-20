@@ -1,0 +1,87 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Reporter > renders ASCII output (multi-snippet on one line) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   x Types mismatched for operation.
+
+   ,---[reporter.test.ts:11:14]
+ 0 | 3 + "5"
+   : v v -v-
+   : | |  \`^^ string 
+   : | \`^^ doesn't support these values    
+   : \`^^ int      
+   \`---
+
+i Change int or string to be the right type and try again
+
+"
+`;
+
+exports[`Reporter > renders ASCII output (snippets across lines) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   x This is the part that broke
+
+   ,---[reporter.test.ts:47:14]
+ 0 | source
+   : ---v--
+   :    \`^^ this should be foo  
+ 1 |   text
+   :   --v-
+   :     \`^^ this should be goodbye 
+ 2 |     here
+   \`---
+
+i Please consult the guides
+
+"
+`;
+
+exports[`Reporter > renders Unicode output (multi-snippet on one line) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   × Types mismatched for operation.
+
+   ╭───[reporter.test.ts:29:14]
+ 0 │ 3 + "5"
+   · ┬ ┬ ─┬─
+   · │ │  ╰── string 
+   · │ ╰── doesn't support these values    
+   · ╰── int      
+   ╰───
+
+‽ Change int or string to be the right type and try again
+
+"
+`;
+
+exports[`Reporter > renders Unicode output (snippets across lines) 1`] = `
+"Error: Error ( http://github.com/foo/bar#guides )
+
+   × This is the part that broke
+
+   ╭───[reporter.test.ts:65:14]
+ 0 │ source
+   · ───┬──
+   ·    ╰── this should be foo  
+ 1 │   text
+   ·   ──┬─
+   ·     ╰── this should be goodbye 
+ 2 │     here
+   ╰───
+
+‽ Please consult the guides
+
+"
+`;
+
+exports[`Reporter > renders without snippets 1`] = `
+"Error: Error
+
+   × nope
+
+‽ try again
+
+"
+`;

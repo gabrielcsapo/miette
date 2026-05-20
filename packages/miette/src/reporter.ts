@@ -1,293 +1,213 @@
-import { Chalk } from "chalk";
+import type { Painter } from "./ansi.js"
+import type { Diagnostic } from "./diagnostic.js"
+import type { Line, Snippet, ThemeCharacters, ThemeStyle } from "./types.js"
 
-import { Diagnostic } from "./diagnostic";
-import { ISnippet, ILine, IThemeStyle, IThemeCharacters } from "./types";
-
-/**
- * @public
- */
-interface ISnippetRendered extends ISnippet {
-  offset: number;
-  rendered?: boolean;
-  color: Chalk;
+interface PositionedSnippet {
+  lineNumber: number
+  startCol: number
+  endCol: number
+  label?: string
+  color: Painter
 }
 
-function minimumGuard(count: number, minimum: number) {
-  if (count < minimum) {
-    return minimum;
-  }
-
-  return count;
-}
-
-/**
- * @public
- */
 export class Reporter {
-  theme: {
-    style: IThemeStyle;
-    characters: IThemeCharacters;
-  };
-
-  diagnostic: Diagnostic;
-
-  // This will be used to store the raw output and used in tests for assertions
-  debugString = "";
+  private readonly diagnostic: Diagnostic
+  private readonly style: ThemeStyle
+  private readonly chars: ThemeCharacters
+  private output = ""
 
   constructor(
     diagnostic: Diagnostic,
-    style: IThemeStyle,
-    characters: IThemeCharacters
+    style: ThemeStyle,
+    chars: ThemeCharacters,
   ) {
-    this.diagnostic = diagnostic;
-    this.theme = {
-      style,
-      characters,
-    };
+    this.diagnostic = diagnostic
+    this.style = style
+    this.chars = chars
   }
 
-  write(str: string): void {
-    process.stdout.write(str);
-
-    this.debugString += str;
+  render(): string {
+    this.output = ""
+    this.renderHeader()
+    this.renderCause()
+    this.renderSnippets()
+    this.renderFooter()
+    this.renderCauseChain()
+    return this.output
   }
 
-  writeLine(str: string): void {
-    process.stdout.write(str + "\n");
-
-    this.debugString += str + "\n";
+  private writeLine(s: string): void {
+    this.output += `${s}\n`
   }
 
-  severityStyle(): Chalk {
-    if (this.diagnostic.severity === "WARNING") {
-      return this.theme.style.warning;
-    }
-
-    if (this.diagnostic.severity === "ADVICE") {
-      return this.theme.style.advice;
-    }
-
-    return this.theme.style.error;
+  private severityStyle(): Painter {
+    if (this.diagnostic.severity === "WARNING") return this.style.warning
+    if (this.diagnostic.severity === "ADVICE") return this.style.advice
+    return this.style.error
   }
 
-  getLines(str: string): ILine[] {
-    let line = 0;
-    let column = 0;
-    let offset = 0;
-    let line_offset = 0;
-
-    let line_str = "";
-    const lines: ILine[] = [];
-
-    const iter = str.split("");
-
-    iter.forEach((c, i) => {
-      const at_end_of_file = iter.length === i + 1;
-
-      if (c === "\r") {
-        if (iter[i + 1] === "\n") {
-          offset += 1;
-          line += 1;
-          column = 0;
-        } else {
-          line_str += c;
-          column += 1;
-        }
-      }
-
-      if (c === "\n") {
-        line += 1;
-        column = 0;
-      }
-
-      if (c !== "\n" && c !== "\r") {
-        line_str += c;
-        column += 1;
-      }
-
-      if (c === " ") {
-        line_offset += 1;
-      }
-
-      if (iter[i + 1] === "" && !at_end_of_file) {
-        line += 1;
-      }
-
-      if (column === 0 || iter[i + 1] === "") {
-        lines.push({
-          line_number: line,
-          offset: line_offset,
-          length: line_str.length - line_offset,
-          text: line_str,
-        });
-        line_str = "";
-        line_offset = offset;
-      }
-    });
-
-    return lines;
+  private renderHeader(): void {
+    const codeStyle = this.style.code
+    const name = this.diagnostic.functionName
+    const text = this.diagnostic.url
+      ? codeStyle(`${name} ( ${this.diagnostic.url} )`)
+      : codeStyle(name)
+    this.writeLine(`Error: ${text}`)
   }
 
-  render(): void {
-    this.render_header();
-    this.render_cause();
-    this.render_snippets();
-    this.render_footer();
+  private renderCause(): void {
+    const sev = this.severityStyle()
+    this.writeLine("")
+    this.writeLine(`   ${sev(`${this.chars.x} ${this.diagnostic.message}`)}`)
   }
 
-  render_header(): void {
-    if (this.diagnostic.url) {
-      this.writeLine(
-        `Error: ${this.theme.style.code(
-          `${this.diagnostic.functionName} ( ${this.diagnostic.url} )`
-        )}`
-      );
-    } else {
-      this.writeLine(
-        `Error: ${this.theme.style.code(this.diagnostic.functionName)}`
-      );
-    }
-  }
-
-  render_cause(): void {
-    const severityStyle = this.severityStyle();
-
-    if (this.diagnostic.error) {
-      this.writeLine("");
-      this.writeLine(
-        `${" ".repeat(3)}${severityStyle(
-          `${this.theme.characters.x} ${this.diagnostic.message}`
-        )}`
-      );
-    }
-  }
-
-  render_snippets(): void {
-    this.writeLine("");
-
-    const lines = this.getLines(this.diagnostic.source);
-    const lineWidth = lines
-      .map((line) => line.line_number)
-      .sort((a, b) => b - a)[0]
-      .toString().length;
-
-    this.write(
-      `${" ".repeat(lineWidth + 2)}${
-        this.theme.characters.ltop
-      }${this.theme.characters.hbar.repeat(3)}`
-    );
-
-    // if we have a name for the snippet we should use that
-    this.write(`[${this.diagnostic.fileAndLineNumber}]`);
-    this.writeLine("");
-
-    lines.forEach((line, i) => {
-      this.writeLine(
-        ` ${i} ${" ".repeat(minimumGuard(lineWidth - i.toString().length, 0))}${
-          this.theme.characters.vbar
-        } ${line.text}`
-      );
-
-      // get all the snippets that are applicable to a certain line
-      const snippetsOnLineSorted: ISnippetRendered[] = this.diagnostic.snippets
-        .filter((snippet) => {
-          return line.text.trim().indexOf(snippet.context) > -1;
-        })
-        .map((snippet, i) => {
-          return {
-            ...snippet,
-            rendered: false,
-            offset: line.text.trim().indexOf(snippet.context),
-            color: this.theme.style.highlights[i],
-          };
-        })
-        .sort((a, b) => {
-          return a.offset - b.offset;
-        });
-
-      // Short circuit and do nothing as there are no snippets
-      if (snippetsOnLineSorted.length === 0) {
-        return;
-      }
-
-      // Render the initial selection bar for the text the snippet is related to
-      const initialHighlighedLine = Array(line.length).fill(" ");
-      snippetsOnLineSorted.forEach((snippet) => {
-        // TODO: colorizing everything is expensive, we should be able to reduce the cost of doing this
-
-        // We are setting the bars and splicing the mtop character in the middle of the needed length at the right offset
-        const highlightedBar = Array(snippet.context.length).fill(
-          snippet.color(this.theme.characters.hbar)
-        );
-        highlightedBar.splice(snippet.context.length / 2, 1, [
-          snippet.color(this.theme.characters.mtop),
-        ]);
-        initialHighlighedLine.splice(
-          snippet.offset,
-          snippet.context.length,
-          ...highlightedBar
-        );
-      });
-
-      // set the line offset that needs to be added when we are only rendering a single entry on a line or multiple
-      const lineOffset = snippetsOnLineSorted.length > 1 ? 1 : line.offset + 1;
-
-      // Renders the initially highlights for the line
-      this.writeLine(
-        `${" ".repeat(lineWidth + 2)}${
-          this.theme.characters.vbar_break
-        }${" ".repeat(lineOffset)}${initialHighlighedLine.join("")}`
-      );
-
-      // continue looping until we have rendered all the snippets
-      while (snippetsOnLineSorted.length > 0) {
-        const lineToRender = Array(line.length).fill(" ");
-        snippetsOnLineSorted.forEach((snippet, i) => {
-          // If we are the last snippet then we can render out the context
-          if (i === snippetsOnLineSorted.length - 1) {
-            lineToRender.splice(
-              snippet.offset + snippet.context.length / 2,
-              1,
-              [
-                snippet.color(
-                  this.theme.characters.lbot +
-                    this.theme.characters.underline.repeat(2) +
-                    " " +
-                    snippet.highlight
-                ),
-              ]
-            );
-            snippetsOnLineSorted.pop();
-          } else {
-            lineToRender.splice(
-              snippet.offset + snippet.context.length / 2,
-              1,
-              [snippet.color(this.theme.characters.vbar)]
-            );
-          }
-        });
-
-        this.writeLine(
-          `${" ".repeat(lineWidth + 2)}${
-            this.theme.characters.vbar_break
-          }${" ".repeat(lineOffset)}${lineToRender.join("")}`
-        );
-      }
-    });
-
-    this.write(
-      `${" ".repeat(lineWidth + 2)}${
-        this.theme.characters.lbot
-      }${this.theme.characters.hbar.repeat(3)}`
-    );
-  }
-
-  render_footer(): void {
+  private renderFooter(): void {
     if (this.diagnostic.help) {
-      this.writeLine("");
-      this.write(this.theme.characters.fyi + " ");
-      this.writeLine(this.theme.style.help(this.diagnostic.help));
+      this.writeLine("")
+      this.writeLine(
+        `${this.chars.fyi} ${this.style.help(this.diagnostic.help)}`,
+      )
     }
-    this.writeLine("");
+    this.writeLine("")
   }
+
+  private renderCauseChain(): void {
+    const max = this.diagnostic.input.causeDepth ?? 8
+    if (max <= 0) return
+    let cause = this.diagnostic.cause
+    let depth = 1
+    while (cause && depth <= max) {
+      const indent = "  ".repeat(depth)
+      this.writeLine(
+        `${indent}${this.chars.rarrow} caused by: ${this.style.advice(cause.message)}`,
+      )
+      const next = (cause as { cause?: unknown }).cause
+      cause = next instanceof Error ? next : undefined
+      depth++
+    }
+  }
+
+  private renderSnippets(): void {
+    if (this.diagnostic.snippets.length === 0) return
+
+    const lines = splitLines(this.diagnostic.source)
+    if (lines.length === 0) return
+
+    const positioned = positionSnippets(
+      this.diagnostic.snippets,
+      lines,
+      this.style.highlights,
+    )
+    if (positioned.length === 0) return
+
+    this.writeLine("")
+    const lineWidth = String(
+      Math.max(...lines.map((l) => l.line_number)),
+    ).length
+    const gutter = " ".repeat(lineWidth + 2)
+
+    const fileLoc = this.diagnostic.fileAndLineNumber
+    const topBorder = `${gutter}${this.chars.ltop}${this.chars.hbar.repeat(3)}${
+      fileLoc ? `[${fileLoc}]` : ""
+    }`
+    this.writeLine(topBorder)
+
+    const byLine = new Map<number, PositionedSnippet[]>()
+    for (const p of positioned) {
+      const arr = byLine.get(p.lineNumber) ?? []
+      arr.push(p)
+      byLine.set(p.lineNumber, arr)
+    }
+
+    for (const line of lines) {
+      const lineNumStr = String(line.line_number).padStart(lineWidth, " ")
+      this.writeLine(` ${lineNumStr} ${this.chars.vbar} ${line.text}`)
+
+      const snippetsHere = byLine.get(line.line_number)
+      if (!snippetsHere || snippetsHere.length === 0) continue
+      snippetsHere.sort((a, b) => a.startCol - b.startCol)
+
+      const rowWidth = line.text.length
+      const underlineRow: string[] = Array.from({ length: rowWidth }, () => " ")
+      for (const snip of snippetsHere) {
+        const w = Math.max(1, snip.endCol - snip.startCol)
+        const mid = Math.floor(w / 2)
+        for (let i = 0; i < w; i++) {
+          underlineRow[snip.startCol + i] = snip.color(this.chars.hbar)
+        }
+        underlineRow[snip.startCol + mid] = snip.color(this.chars.mtop)
+      }
+      this.writeLine(
+        `${gutter}${this.chars.vbar_break} ${underlineRow.join("")}`,
+      )
+
+      const remaining = [...snippetsHere]
+      while (remaining.length > 0) {
+        const row: string[] = Array.from({ length: rowWidth }, () => " ")
+        for (let i = 0; i < remaining.length - 1; i++) {
+          const snip = remaining[i]
+          const w = Math.max(1, snip.endCol - snip.startCol)
+          const mid = Math.floor(w / 2)
+          row[snip.startCol + mid] = snip.color(this.chars.vbar)
+        }
+        const last = remaining[remaining.length - 1]
+        const w = Math.max(1, last.endCol - last.startCol)
+        const mid = Math.floor(w / 2)
+        const labelText = last.label ?? ""
+        const tail =
+          this.chars.lbot +
+          this.chars.underline.repeat(2) +
+          (labelText ? ` ${labelText}` : "")
+        row[last.startCol + mid] = last.color(tail)
+        this.writeLine(`${gutter}${this.chars.vbar_break} ${row.join("")}`)
+        remaining.pop()
+      }
+    }
+
+    this.writeLine(`${gutter}${this.chars.lbot}${this.chars.hbar.repeat(3)}`)
+  }
+}
+
+function splitLines(source: string): Line[] {
+  const lines: Line[] = []
+  let offset = 0
+  let lineNumber = 0
+  const parts = source.split("\n")
+  const last =
+    parts.length > 0 && parts[parts.length - 1] === ""
+      ? parts.length - 1
+      : parts.length
+  for (let i = 0; i < last; i++) {
+    const text = parts[i]
+    lines.push({ line_number: lineNumber, offset, length: text.length, text })
+    offset += text.length + 1
+    lineNumber++
+  }
+  return lines
+}
+
+function positionSnippets(
+  snippets: Snippet[],
+  lines: Line[],
+  palette: Painter[],
+): PositionedSnippet[] {
+  const result: PositionedSnippet[] = []
+  snippets.forEach((snippet, idx) => {
+    const [start, end] = snippet.span
+    const line = lines.find(
+      (l) => start >= l.offset && start < l.offset + l.length + 1,
+    )
+    if (!line) return
+    const startCol = Math.max(0, start - line.offset)
+    const endCol = Math.min(line.text.length, end - line.offset)
+    if (endCol <= startCol) return
+    result.push({
+      lineNumber: line.line_number,
+      startCol,
+      endCol,
+      label: snippet.label,
+      color: palette[idx % palette.length],
+    })
+  })
+  return result
 }

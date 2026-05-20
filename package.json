@@ -1,15 +1,24 @@
 {
-  "name": "root",
+  "name": "miette-workspace",
   "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "lint": "lerna run lint",
-    "build": "lerna run build",
-    "test": "lerna run test",
-    "playground": "cd packages/miette && npm run playground",
-    "prepare": "husky install && lerna bootstrap"
+    "build": "pnpm -r run build",
+    "test": "pnpm -r run test",
+    "lint": "oxlint",
+    "lint:fix": "oxlint --fix",
+    "format": "oxfmt . --write",
+    "format:check": "oxfmt . --check",
+    "check": "pnpm format:check && pnpm lint",
+    "playground": "pnpm --filter miette run playground",
+    "dev:site": "pnpm --filter website run dev",
+    "release": "node scripts/release.mjs"
   },
   "devDependencies": {
-    "husky": ">=6",
-    "lerna": "^4.0.0"
+    "oxfmt": "^0.1.0",
+    "oxlint": "^0.15.0"
   }
 }

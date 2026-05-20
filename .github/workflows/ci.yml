@@ -1,7 +1,4 @@
-# This workflow will do a clean install of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
+name: CI
 
 on:
   push:
@@ -10,43 +7,56 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        node-version: [16.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+        node-version: [20, 22, 24]
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
-      - run: cd packages/miette
-      - run: npm i -g npm@7
-      - run: npm ci
-      - run: npm run build --if-present
-      - run: npm test
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm lint
+      - run: pnpm -r run build
+      - run: pnpm -r run test
 
-  gh-release:
-    if: github.event_name != 'pull_request'
+  build-site:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
         with:
-          node-version: "16.x"
-      - uses: webfactory/ssh-agent@v0.5.3
+          version: 9
+      - uses: actions/setup-node@v4
         with:
-          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
-      - name: Release to GitHub Pages
-        env:
-          USE_SSH: true
-          GIT_USER: git
-        run: |
-          git config --global user.email "gabecsapo@gmail.com"
-          git config --global user.name "Gabriel J. Csapo"
-          npm install
-          cd packages/website
-          npm run deploy
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter miette run build
+      - run: pnpm --filter website run build
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: packages/website/.vitepress/dist
+
+  deploy-site:
+    if: github.ref == 'refs/heads/main'
+    needs: build-site
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

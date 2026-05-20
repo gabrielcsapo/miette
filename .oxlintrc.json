@@ -1,0 +1,22 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "categories": {
+    "correctness": "error",
+    "perf": "warn",
+    "suspicious": "warn",
+    "pedantic": "off",
+    "style": "off"
+  },
+  "env": {
+    "node": true,
+    "browser": true,
+    "es2024": true
+  },
+  "ignorePatterns": [
+    "**/dist/**",
+    "**/coverage/**",
+    "**/node_modules/**",
+    "**/.vitepress/cache/**",
+    "**/.vitepress/dist/**"
+  ]
+}

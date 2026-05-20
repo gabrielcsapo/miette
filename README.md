@@ -1,35 +1,77 @@
 # miette
 
-> Fancy upgrade to console output
+> Fancy upgrade to `console.log` — annotated, source-aware error diagnostics for TypeScript.
 
-> > This is early days! Until we hit 1.0.0 the API is subject to change. Help us out in understanding what your use case is and how we can harden the API layer to be helpful in your project!
+`miette` turns plain error messages into Rust-flavored diagnostics that point at the
+exact spans of code that went wrong, with labels, help text, and a `.cause` chain.
+Zero runtime dependencies. Runs in Node and the browser.
 
-![Example screenshot](packages/website/static/img/screenshot.png)
+Inspired by [`zkat/miette`](https://github.com/zkat/miette).
 
-## What is this?
+## Install
 
-Inspired by [https://github.com/zkat/miette](https://github.com/zkat/miette) this library aims to make error logging and diagnostic messages more user friendly!
-
-## Installation
-
-```
-npm install miette --save
+```sh
+pnpm add miette
 ```
 
-## Usage
+## Quick start
 
-For the API layer and general examples please visit the [api website](https://gabrielcsapo.github.io/miette)!
+```ts
+import { formatDiagnostic } from "miette";
 
-### Playground
-
-For a quick and easy playground environment just simply clone this repo and run:
-
+console.log(
+  formatDiagnostic({
+    error: new Error("Types mismatched for operation."),
+    source: '3 + "5"',
+    snippets: [
+      { span: [0, 1], label: "int" },
+      { span: [2, 3], label: "doesn't support these values" },
+      { span: [4, 7], label: "string" },
+    ],
+    diagnostic: {
+      code: "E0277",
+      help: "Coerce one side to match the other.",
+    },
+  })
+);
 ```
-npm run playground
+
+Throwable variant:
+
+```ts
+import { MietteError } from "miette";
+
+throw new MietteError({
+  message: "Type 'string' is not assignable to type 'number'.",
+  source: "const x: number = 'oops';",
+  snippets: [{ span: [18, 24], label: "string here" }],
+  diagnostic: { code: "TS2322", help: "Use a number literal instead." },
+});
 ```
+
+`MietteError` is a real `Error` subclass with a `.format()` method. ES2022 `Error.cause`
+chains are walked and rendered automatically.
+
+## Interactive playground
+
+[gabrielcsapo.github.io/miette](https://gabrielcsapo.github.io/miette) — edit source, drag
+to add snippets, see the rendered output live in an `xterm.js` terminal.
 
 ## Development
 
-This is a lerna repo, simply running `npm install` at the top level will allow you to install all the dependencies necessary.
+This is a pnpm workspace with two packages:
 
-Once you have installed all dependencies you can `cd` into `packages/miette` to add functionality or adds tests as necessary.
+- `packages/miette` — the library
+- `packages/website` — Vitepress site with the interactive playground
+
+```sh
+pnpm install
+pnpm -r run build
+pnpm -r run test
+pnpm playground       # node CLI demo
+pnpm dev:site         # Vitepress dev server at http://localhost:5173
+```
+
+## License
+
+Apache-2.0
