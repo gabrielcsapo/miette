@@ -17,7 +17,7 @@ pnpm add miette
 ## Quick start
 
 ```ts
-import { formatDiagnostic } from "miette";
+import { formatDiagnostic } from "miette"
 
 console.log(
   formatDiagnostic({
@@ -32,21 +32,21 @@ console.log(
       code: "E0277",
       help: "Coerce one side to match the other.",
     },
-  })
-);
+  }),
+)
 ```
 
 Throwable variant:
 
 ```ts
-import { MietteError } from "miette";
+import { MietteError } from "miette"
 
 throw new MietteError({
   message: "Type 'string' is not assignable to type 'number'.",
   source: "const x: number = 'oops';",
   snippets: [{ span: [18, 24], label: "string here" }],
   diagnostic: { code: "TS2322", help: "Use a number literal instead." },
-});
+})
 ```
 
 `MietteError` is a real `Error` subclass with a `.format()` method. ES2022 `Error.cause`

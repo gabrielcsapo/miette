@@ -2,7 +2,31 @@
   "name": "miette",
   "version": "1.0.0",
   "description": "Fancy upgrade to console.log — annotated, source-aware error diagnostics",
+  "keywords": [
+    "ansi",
+    "console",
+    "diagnostic",
+    "error",
+    "miette",
+    "pretty-error"
+  ],
+  "homepage": "https://gabrielcsapo.github.io/miette",
+  "bugs": {
+    "url": "https://github.com/gabrielcsapo/miette/issues"
+  },
+  "license": "Apache-2.0",
+  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabrielcsapo/miette.git"
+  },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "type": "module",
+  "sideEffects": false,
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -18,15 +42,6 @@
       }
     }
   },
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
-  "sideEffects": false,
-  "engines": {
-    "node": ">=20"
-  },
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -36,30 +51,15 @@
     "playground": "tsx ./playground.ts",
     "typecheck": "tsc --noEmit"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/gabrielcsapo/miette.git"
-  },
-  "author": "Gabriel J. Csapo <gabecsapo@gmail.com>",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/gabrielcsapo/miette/issues"
-  },
-  "homepage": "https://gabrielcsapo.github.io/miette",
-  "keywords": [
-    "error",
-    "diagnostic",
-    "console",
-    "miette",
-    "pretty-error",
-    "ansi"
-  ],
   "devDependencies": {
     "@types/node": "^22.10.0",
+    "@vitest/coverage-v8": "^2.1.8",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2",
-    "vitest": "^2.1.8",
-    "@vitest/coverage-v8": "^2.1.8"
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

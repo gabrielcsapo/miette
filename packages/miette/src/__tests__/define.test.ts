@@ -22,7 +22,7 @@ describe("defineDiagnostic", () => {
   })
 
   test("interpolates args through message and help", () => {
-    const TS2345 = defineDiagnostic<{ actual: string expected: string }>({
+    const TS2345 = defineDiagnostic<{ actual: string; expected: string }>({
       code: "TS2345",
       message: ({ actual, expected }) =>
         `Argument of type '${actual}' is not assignable to '${expected}'.`,

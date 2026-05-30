@@ -1,9 +1,9 @@
 import { MietteError } from "./miette.js"
 import type { Severity, Snippet } from "./types.js"
 
-type Render<Args,> = [Args] extends [never]
+type Render<Args> = [Args] extends [never]
   ? string
-  : string | (args: Args) => string
+  : string | ((args: Args) => string)
 
 export interface DiagnosticDef<Args = never> {
   code?: Render<Args>
@@ -21,18 +21,15 @@ export interface DefinedDiagnosticInit {
   causeDepth?: number
 }
 
-export interface DefinedDiagnosticInitWithArgs<Args>
-  extendsDefinedDiagnosticInit {
+export interface DefinedDiagnosticInitWithArgs<
+  Args,
+> extends DefinedDiagnosticInit {
   args: Args
 }
 
-export type DefinedDiagnostic<Args,> = [Args] extends [never]
-  ? new (
-    init: DefinedDiagnosticInit,
-  ) => MietteError
-  : new (
-      init: DefinedDiagnosticInitWithArgs<Args>,
-    ) => MietteError
+export type DefinedDiagnostic<Args> = [Args] extends [never]
+  ? new (init: DefinedDiagnosticInit) => MietteError
+  : new (init: DefinedDiagnosticInitWithArgs<Args>) => MietteError
 
 /**
  * Declare a diagnostic shape once and reuse it across throw sites. The
@@ -57,11 +54,13 @@ export type DefinedDiagnostic<Args,> = [Args] extends [never]
 export function defineDiagnostic<Args = never>(
   def: DiagnosticDef<Args>,
 ): DefinedDiagnostic<Args> {
-  const resolveWith = (args: Args) => (v: unknown): string | undefined => {
-    if (v === undefined) return undefined
-    if (typeof v === "function") return v as (a: Args) => string(args)
-    return v as string
-  }
+  const resolveWith =
+    (args: Args) =>
+    (v: unknown): string | undefined => {
+      if (v === undefined) return undefined
+      if (typeof v === "function") return (v as (a: Args) => string)(args)
+      return v as string
+    }
 
   class Defined extends MietteError {
     constructor(init: DefinedDiagnosticInit & { args?: Args }) {

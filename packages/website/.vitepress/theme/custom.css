@@ -1,0 +1,73 @@
+/* Home page — full-bleed hero playground */
+
+.page-home .VPDoc.has-aside .content-container {
+  max-width: none;
+}
+
+.page-home .VPDoc {
+  padding: 0 !important;
+}
+
+.page-home .VPDoc > .container {
+  max-width: none !important;
+}
+
+.page-home .VPDoc .content {
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+.page-home .VPDoc .content-container {
+  max-width: none !important;
+}
+
+.page-home .vp-doc {
+  max-width: none;
+}
+
+.page-home main {
+  padding: 0 !important;
+}
+
+@media (min-width: 960px) {
+  .page-home .VPSidebar {
+    display: none;
+  }
+}
+
+:root {
+  /* Light mode defaults — overridden under .dark below. */
+  --miette-term-bg: #ffffff;
+  --miette-term-fg: #1f2328;
+  --miette-term-fg-secondary: #424a53;
+  --miette-term-fg-muted: #57606a;
+  --miette-term-fg-subtle: #8c959f;
+  --miette-term-chrome: #f6f8fa;
+  --miette-term-border: #d0d7de;
+  --miette-term-cursor: #1f2328;
+  --miette-term-active-line: rgba(110, 118, 129, 0.07);
+  --miette-term-selection: rgba(120, 113, 198, 0.2);
+  --miette-term-accent: #6f42c1;
+  --miette-term-accent-soft: rgba(120, 113, 198, 0.1);
+  --miette-term-accent-strong: rgba(120, 113, 198, 0.45);
+  --miette-term-danger: #cf222e;
+  --miette-term-danger-soft: rgba(207, 34, 46, 0.08);
+}
+
+.dark {
+  --miette-term-bg: #0d1117;
+  --miette-term-fg: #e6edf3;
+  --miette-term-fg-secondary: #c9d1d9;
+  --miette-term-fg-muted: #8b949e;
+  --miette-term-fg-subtle: #6e7681;
+  --miette-term-chrome: #161b22;
+  --miette-term-border: #30363d;
+  --miette-term-cursor: #e6edf3;
+  --miette-term-active-line: rgba(110, 118, 129, 0.1);
+  --miette-term-selection: rgba(120, 113, 198, 0.3);
+  --miette-term-accent: #d2c5ff;
+  --miette-term-accent-soft: rgba(120, 113, 198, 0.12);
+  --miette-term-accent-strong: rgba(120, 113, 198, 0.55);
+  --miette-term-danger: #ff7b72;
+  --miette-term-danger-soft: rgba(255, 123, 114, 0.1);
+}

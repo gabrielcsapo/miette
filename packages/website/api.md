@@ -12,39 +12,53 @@ Single entry point. ESM and CJS both ship from `miette`:
 
 ```ts
 import {
-  formatDiagnostic, MietteError, defineDiagnostic, Diagnostic, Reporter,
-  ascii, unicode,
-} from "miette";
+  formatDiagnostic,
+  MietteError,
+  defineDiagnostic,
+  Diagnostic,
+  Reporter,
+  ascii,
+  unicode,
+} from "miette"
 import type {
-  DiagnosticInput, DiagnosticMeta, MietteErrorInit,
-  DiagnosticDef, DefinedDiagnostic,
-  DefinedDiagnosticInit, DefinedDiagnosticInitWithArgs,
-  Snippet, Severity, Line,
-  Theme, ThemeStyle, ThemeCharacters,
+  DiagnosticInput,
+  DiagnosticMeta,
+  MietteErrorInit,
+  DiagnosticDef,
+  DefinedDiagnostic,
+  DefinedDiagnosticInit,
+  DefinedDiagnosticInitWithArgs,
+  Snippet,
+  Severity,
+  Line,
+  Theme,
+  ThemeStyle,
+  ThemeCharacters,
   Painter,
-} from "miette";
+} from "miette"
 ```
+
 :::
 
 ## At a glance
 
-| Category | Exports |
-| --- | --- |
-| Rendering | [`formatDiagnostic`](#formatdiagnostic-input) |
-| Errors | [`MietteError`](#mietteerror), [`MietteErrorInit`](#mietteerrorinit) |
-| Declarative | [`defineDiagnostic`](#definediagnostic-def), [`DiagnosticDef`](#diagnosticdef), [`DefinedDiagnostic`](#defineddiagnostic) |
-| Lower-level | [`Diagnostic`](#diagnostic), [`Reporter`](#reporter) |
-| Themes | [`ascii`](#ascii), [`unicode`](#unicode), [`Theme`](#theme), [`ThemeStyle`](#themestyle), [`ThemeCharacters`](#themecharacters) |
-| Input types | [`DiagnosticInput`](#diagnosticinput), [`Snippet`](#snippet), [`DiagnosticMeta`](#diagnosticmeta), [`Severity`](#severity) |
-| Misc types | [`Line`](#line), [`Painter`](#painter) |
-| Environment | [`NO_COLOR` and friends](#environment) |
+| Category    | Exports                                                                                                                         |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| Rendering   | [`formatDiagnostic`](#formatdiagnostic-input)                                                                                   |
+| Errors      | [`MietteError`](#mietteerror), [`MietteErrorInit`](#mietteerrorinit)                                                            |
+| Declarative | [`defineDiagnostic`](#definediagnostic-def), [`DiagnosticDef`](#diagnosticdef), [`DefinedDiagnostic`](#defineddiagnostic)       |
+| Lower-level | [`Diagnostic`](#diagnostic), [`Reporter`](#reporter)                                                                            |
+| Themes      | [`ascii`](#ascii), [`unicode`](#unicode), [`Theme`](#theme), [`ThemeStyle`](#themestyle), [`ThemeCharacters`](#themecharacters) |
+| Input types | [`DiagnosticInput`](#diagnosticinput), [`Snippet`](#snippet), [`DiagnosticMeta`](#diagnosticmeta), [`Severity`](#severity)      |
+| Misc types  | [`Line`](#line), [`Painter`](#painter)                                                                                          |
+| Environment | [`NO_COLOR` and friends](#environment)                                                                                          |
 
 ## Functions
 
 ### `formatDiagnostic(input)`
 
 ```ts
-function formatDiagnostic(input: DiagnosticInput): string;
+function formatDiagnostic(input: DiagnosticInput): string
 ```
 
 Renders an [`DiagnosticInput`](#diagnosticinput) to an ANSI-styled string.
@@ -52,13 +66,13 @@ Picks the [`unicode`](#unicode) theme when supported, falls back to
 [`ascii`](#ascii) otherwise. No I/O — the return value is the entire output.
 
 ```ts
-import { formatDiagnostic } from "miette";
+import { formatDiagnostic } from "miette"
 
 const out = formatDiagnostic({
   error: new Error("oops"),
   source: "let x =",
   snippets: [{ span: [6, 7], label: "expected expression" }],
-});
+})
 ```
 
 **Gotchas**
@@ -74,31 +88,31 @@ const out = formatDiagnostic({
 
 ```ts
 function defineDiagnostic<Args = never>(
-  def: DiagnosticDef<Args>
-): DefinedDiagnostic<Args>;
+  def: DiagnosticDef<Args>,
+): DefinedDiagnostic<Args>
 ```
 
 Pin a diagnostic shape — `code`, `message`, `help`, `url`, default `severity` —
 once, and reuse it across throw sites. The runtime analog of Rust miette's
 `#[derive(Diagnostic)]`. The return value is a `MietteError` subclass whose
-constructor takes only the *per-throw* fields: `source`, `snippets`, and (if
+constructor takes only the _per-throw_ fields: `source`, `snippets`, and (if
 your messages are functions) `args`.
 
 ```ts
-import { defineDiagnostic } from "miette";
+import { defineDiagnostic } from "miette"
 
 const TS2345 = defineDiagnostic<{ actual: string; expected: string }>({
   code: "TS2345",
   message: ({ actual, expected }) =>
     `Argument of type '${actual}' is not assignable to '${expected}'.`,
   help: ({ expected }) => `Pass a ${expected}, or change the parameter type.`,
-});
+})
 
 throw new TS2345({
   source: 'divide(10, "two")',
   snippets: [{ span: [11, 16], label: "string passed here" }],
   args: { actual: "string", expected: "number" },
-});
+})
 ```
 
 **Field notes**
@@ -122,16 +136,16 @@ throw new TS2345({
 
 ```ts
 class MietteError extends Error {
-  readonly source: string;
-  readonly snippets: Snippet[];
-  readonly severity: Severity;
-  readonly code?: string;
-  readonly help?: string;
-  readonly url?: string;
+  readonly source: string
+  readonly snippets: Snippet[]
+  readonly severity: Severity
+  readonly code?: string
+  readonly help?: string
+  readonly url?: string
 
-  constructor(init: MietteErrorInit);
+  constructor(init: MietteErrorInit)
 
-  format(): string;
+  format(): string
 }
 ```
 
@@ -139,14 +153,14 @@ A throwable `Error` that carries source-pointing snippets and renders itself via
 [`.format()`](#mietteerror-format). Pass it anywhere a plain `Error` is expected.
 
 ```ts
-import { MietteError } from "miette";
+import { MietteError } from "miette"
 
 throw new MietteError({
   message: "Type 'string' is not assignable to type 'number'.",
   source: "const x: number = 'oops';",
   snippets: [{ span: [18, 24], label: "string here" }],
   diagnostic: { code: "TS2322", help: "Use a number literal instead." },
-});
+})
 ```
 
 **Field notes**
@@ -170,19 +184,19 @@ with the error's own fields. Pure — call it as many times as you like.
 
 ```ts
 class Diagnostic {
-  constructor(input: DiagnosticInput);
+  constructor(input: DiagnosticInput)
 
-  readonly input: DiagnosticInput;
-  readonly message: string;
-  readonly code?: string;
-  readonly help?: string;
-  readonly url?: string;
-  readonly source: string;          // always newline-terminated
-  readonly severity: Severity;
-  readonly snippets: Snippet[];
-  readonly functionName: string;
-  readonly fileAndLineNumber?: string; // parsed from input.error.stack
-  readonly cause?: Error;
+  readonly input: DiagnosticInput
+  readonly message: string
+  readonly code?: string
+  readonly help?: string
+  readonly url?: string
+  readonly source: string // always newline-terminated
+  readonly severity: Severity
+  readonly snippets: Snippet[]
+  readonly functionName: string
+  readonly fileAndLineNumber?: string // parsed from input.error.stack
+  readonly cause?: Error
 }
 ```
 
@@ -194,18 +208,25 @@ does. Use it when you want to inspect the parsed view before rendering, or when 
 want a custom [`Reporter`](#reporter).
 
 ```ts
-import { Diagnostic, Reporter, unicode } from "miette";
+import { Diagnostic, Reporter, unicode } from "miette"
 
-const d = new Diagnostic({ error: new Error("oops"), source: "x", snippets: [] });
-if (d.severity === "ERROR") console.error(new Reporter(d, unicode().styles, unicode().characters).render());
+const d = new Diagnostic({
+  error: new Error("oops"),
+  source: "x",
+  snippets: [],
+})
+if (d.severity === "ERROR")
+  console.error(
+    new Reporter(d, unicode().styles, unicode().characters).render(),
+  )
 ```
 
 ### `Reporter`
 
 ```ts
 class Reporter {
-  constructor(diagnostic: Diagnostic, style: ThemeStyle, chars: ThemeCharacters);
-  render(): string;
+  constructor(diagnostic: Diagnostic, style: ThemeStyle, chars: ThemeCharacters)
+  render(): string
 }
 ```
 
@@ -215,11 +236,13 @@ closures captured. Construct one per diagnostic, call `render()`, discard.
 Use it directly when you want to force a theme:
 
 ```ts
-import { Diagnostic, Reporter, ascii } from "miette";
+import { Diagnostic, Reporter, ascii } from "miette"
 
-const d = new Diagnostic({ /* ... */ });
-const theme = ascii();
-const out = new Reporter(d, theme.styles, theme.characters).render();
+const d = new Diagnostic({
+  /* ... */
+})
+const theme = ascii()
+const out = new Reporter(d, theme.styles, theme.characters).render()
 ```
 
 **Behavior worth knowing**
@@ -236,7 +259,7 @@ const out = new Reporter(d, theme.styles, theme.characters).render();
 ### `ascii()`
 
 ```ts
-function ascii(): Theme;
+function ascii(): Theme
 ```
 
 Returns a theme that uses plain ASCII box characters (`-`, `|`, `+`, ...).
@@ -246,7 +269,7 @@ incorrectly (older Windows shells, log aggregators, plain-text email).
 ### `unicode()`
 
 ```ts
-function unicode(): Theme;
+function unicode(): Theme
 ```
 
 Returns a theme that uses Unicode box-drawing characters (`─`, `│`, `╭`, ...).
@@ -256,8 +279,8 @@ This is the default in any modern terminal.
 
 ```ts
 interface Theme {
-  characters: ThemeCharacters;
-  styles: ThemeStyle;
+  characters: ThemeCharacters
+  styles: ThemeStyle
 }
 ```
 
@@ -270,16 +293,16 @@ glyphs with the default color styles, or vice versa, by building the object your
 
 ```ts
 interface DiagnosticInput {
-  error: Error;
-  source: string;
-  snippets: Snippet[];
+  error: Error
+  source: string
+  snippets: Snippet[]
   /** Overrides `error.message` when rendered. */
-  message?: string;
-  diagnostic?: DiagnosticMeta;
+  message?: string
+  diagnostic?: DiagnosticMeta
   /** Defaults to "ERROR". */
-  severity?: Severity;
+  severity?: Severity
   /** Max depth to walk `Error.cause`. Defaults to 8. Use 0 to suppress. */
-  causeDepth?: number;
+  causeDepth?: number
 }
 ```
 
@@ -295,8 +318,8 @@ change in a future version. Pin it explicitly if you depend on a specific depth.
 ```ts
 interface Snippet {
   /** Half-open range `[start, end)` into `source`. */
-  span: [start: number, end: number];
-  label?: string;
+  span: [start: number, end: number]
+  label?: string
 }
 ```
 
@@ -313,11 +336,11 @@ Multiple snippets on the same line are colored from a six-color palette
 ```ts
 interface DiagnosticMeta {
   /** Short identifier — appears in the header. */
-  code?: string;
+  code?: string
   /** Footer hint, rendered with the `‽` glyph. */
-  help?: string;
+  help?: string
   /** Renders next to the code as ` ( url )`. */
-  url?: string;
+  url?: string
 }
 ```
 
@@ -327,7 +350,7 @@ header and footer.
 ### `Severity`
 
 ```ts
-type Severity = "ERROR" | "WARNING" | "ADVICE";
+type Severity = "ERROR" | "WARNING" | "ADVICE"
 ```
 
 Controls the header glyph (`×`, `⚠`, `‽`) and color. Defaults to `"ERROR"`.
@@ -338,35 +361,35 @@ severity.
 
 ```ts
 interface MietteErrorInit {
-  source: string;
-  snippets: Snippet[];
-  message?: string;
-  severity?: Severity;
-  diagnostic?: DiagnosticMeta;
-  cause?: Error;
+  source: string
+  snippets: Snippet[]
+  message?: string
+  severity?: Severity
+  diagnostic?: DiagnosticMeta
+  cause?: Error
   /** Max depth to walk `Error.cause`. Defaults to 8. Use 0 to suppress. */
-  causeDepth?: number;
+  causeDepth?: number
 }
 ```
 
 Constructor argument for [`MietteError`](#mietteerror). Note this is **not** the
 same shape as [`DiagnosticInput`](#diagnosticinput) — there's no `error` field
-because the `MietteError` *is* the error.
+because the `MietteError` _is_ the error.
 
 ### `DiagnosticDef`
 
 ```ts
 interface DiagnosticDef<Args = never> {
-  code?: Render<Args>;
-  severity?: Severity;
-  message: Render<Args>;
-  help?: Render<Args>;
-  url?: Render<Args>;
+  code?: Render<Args>
+  severity?: Severity
+  message: Render<Args>
+  help?: Render<Args>
+  url?: Render<Args>
 }
 
 type Render<Args> = [Args] extends [never]
   ? string
-  : string | ((args: Args) => string);
+  : string | ((args: Args) => string)
 ```
 
 The argument to [`defineDiagnostic`](#definediagnostic-def). Everything except
@@ -378,7 +401,7 @@ the generic is omitted, so simple defs stay terse.
 ```ts
 type DefinedDiagnostic<Args> = [Args] extends [never]
   ? new (init: DefinedDiagnosticInit) => MietteError
-  : new (init: DefinedDiagnosticInitWithArgs<Args>) => MietteError;
+  : new (init: DefinedDiagnosticInitWithArgs<Args>) => MietteError
 ```
 
 The constructor type [`defineDiagnostic`](#definediagnostic-def) returns. The
@@ -389,15 +412,15 @@ is function-shaped.
 
 ```ts
 interface DefinedDiagnosticInit {
-  source: string;
-  snippets: Snippet[];
-  cause?: Error;
-  severity?: Severity;
-  causeDepth?: number;
+  source: string
+  snippets: Snippet[]
+  cause?: Error
+  severity?: Severity
+  causeDepth?: number
 }
 
 interface DefinedDiagnosticInitWithArgs<Args> extends DefinedDiagnosticInit {
-  args: Args;
+  args: Args
 }
 ```
 
@@ -409,13 +432,13 @@ Per-throw fields for a defined diagnostic. Note there's no `code` / `message` /
 ```ts
 interface Line {
   /** 0-based line number. */
-  line_number: number;
+  line_number: number
   /** Byte offset of the first char of this line within the source. */
-  offset: number;
+  offset: number
   /** Length of the line text, not including the terminating newline. */
-  length: number;
+  length: number
   /** Raw line text without newline. */
-  text: string;
+  text: string
 }
 ```
 
@@ -426,13 +449,13 @@ internally. Not used in the typical render path.
 
 ```ts
 interface ThemeStyle {
-  error: Painter;
-  warning: Painter;
-  advice: Painter;
-  code: Painter;
-  help: Painter;
-  filename: Painter;
-  highlights: Painter[];
+  error: Painter
+  warning: Painter
+  advice: Painter
+  code: Painter
+  help: Painter
+  filename: Painter
+  highlights: Painter[]
 }
 ```
 
@@ -440,29 +463,46 @@ The set of [`Painter`](#painter) functions a [`Reporter`](#reporter) uses. Build
 your own by importing the painters file is not supported — make one inline:
 
 ```ts
-import type { ThemeStyle } from "miette";
+import type { ThemeStyle } from "miette"
 
-const id = (s: string) => s;
+const id = (s: string) => s
 const plain: ThemeStyle = {
-  error: id, warning: id, advice: id, code: id, help: id, filename: id,
+  error: id,
+  warning: id,
+  advice: id,
+  code: id,
+  help: id,
+  filename: id,
   highlights: [id],
-};
+}
 ```
 
 ### `ThemeCharacters`
 
 ```ts
 interface ThemeCharacters {
-  hbar: string;      vbar: string;       xbar: string;
-  vbar_break: string;
-  uarrow: string;    rarrow: string;
-  ltop: string;      mtop: string;       rtop: string;
-  lbot: string;      mbot: string;       rbot: string;
-  lbox: string;      rbox: string;
-  lcross: string;    rcross: string;
-  underbar: string;  underline: string;
-  fyi: string;       x: string;          warning: string;
-  point_right: string;
+  hbar: string
+  vbar: string
+  xbar: string
+  vbar_break: string
+  uarrow: string
+  rarrow: string
+  ltop: string
+  mtop: string
+  rtop: string
+  lbot: string
+  mbot: string
+  rbot: string
+  lbox: string
+  rbox: string
+  lcross: string
+  rcross: string
+  underbar: string
+  underline: string
+  fyi: string
+  x: string
+  warning: string
+  point_right: string
 }
 ```
 
@@ -470,15 +510,15 @@ The glyph table. Provided fully for both [`ascii()`](#ascii) and [`unicode()`](#
 Override the few you care about by spreading the result:
 
 ```ts
-import { unicode } from "miette";
+import { unicode } from "miette"
 
-const chars = { ...unicode().characters, fyi: "i" };
+const chars = { ...unicode().characters, fyi: "i" }
 ```
 
 ### `Painter`
 
 ```ts
-type Painter = (s: string) => string;
+type Painter = (s: string) => string
 ```
 
 A function that wraps a string in ANSI escape codes (or, when color is disabled,
@@ -487,16 +527,16 @@ supported — it checks at call time, not at construction time.
 
 ## Environment
 
-| Variable             | Effect                                                |
-| -------------------- | ----------------------------------------------------- |
-| `NO_COLOR`           | Any value disables color. Unicode glyphs still used.  |
-| `FORCE_COLOR=0`      | Disables color.                                       |
-| `FORCE_COLOR=false`  | Disables color.                                       |
-| `FORCE_COLOR=1`      | Forces color even when stdout is not a TTY.           |
-| `TERM=linux`         | On non-Windows, falls back to ASCII box characters.   |
-| `CI`                 | On Windows, opts into Unicode.                        |
-| `WT_SESSION`         | Windows Terminal — opts into Unicode.                 |
-| `TERM_PROGRAM=vscode`| VS Code integrated terminal — opts into Unicode.      |
+| Variable              | Effect                                               |
+| --------------------- | ---------------------------------------------------- |
+| `NO_COLOR`            | Any value disables color. Unicode glyphs still used. |
+| `FORCE_COLOR=0`       | Disables color.                                      |
+| `FORCE_COLOR=false`   | Disables color.                                      |
+| `FORCE_COLOR=1`       | Forces color even when stdout is not a TTY.          |
+| `TERM=linux`          | On non-Windows, falls back to ASCII box characters.  |
+| `CI`                  | On Windows, opts into Unicode.                       |
+| `WT_SESSION`          | Windows Terminal — opts into Unicode.                |
+| `TERM_PROGRAM=vscode` | VS Code integrated terminal — opts into Unicode.     |
 
 Browser environments are always treated as color- and Unicode-capable.
 
